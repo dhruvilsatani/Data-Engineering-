@@ -1,0 +1,23 @@
+services:
+  ingest:
+    build: .
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+    command: ["python", "-m", "src.ingest"]
+
+  preprocess:
+    build: .
+    depends_on:
+      - ingest
+    volumes:
+      - ./data:/app/data
+    command: ["python", "-m", "src.preprocess"]
+
+  aggregate:
+    build: .
+    depends_on:
+      - preprocess
+    volumes:
+      - ./data:/app/data
+    command: ["python", "-m", "src.aggregate"]
